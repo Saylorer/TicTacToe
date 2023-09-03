@@ -1,0 +1,58 @@
+from itertools import cycle
+
+
+class TicTacToe:
+	ground = [[' ', '|', ' ', '|', ' '], ['-----'], [' ', '|', ' ', '|', ' '], ['-----'], [' ', '|', ' ', '|', ' ']]
+	sign = 'X'
+	count = cycle('OX')
+
+	@classmethod
+	def show(cls):
+		"""Shows the playing field"""
+		for i in range(5):
+			print(*cls.ground[i], sep='')
+
+	@classmethod
+	def mark(cls, y, x):
+		"""Marks the cell with position (x,y). If it's occupied, program will print 'Недоступная клетка' or 'Игра окончена'"""
+		if y == 1:    # This part of the code arose because I initially filled in the field with delimiters
+			y = 0
+		elif y == 2:
+			y = 2
+		elif y == 3:
+			y = 4
+		if x == 1:
+			x = 0
+		elif x == 2:
+			x = 2
+		elif x == 3:
+			x = 4    #
+		win = cls.winner()
+
+		if cls.ground[y][x] == ' ' and win is None:
+			cls.ground[y][x] = cls.sign
+			cls.sign = next(cls.count)
+		elif win is not None:
+			print('Игра окончена')
+		else:
+			print('Недоступная клетка')
+
+	@classmethod
+	def winner(cls):
+		"""This function defines winner of the game"""
+		y = 0
+		for x in range(0, 5, 2):
+			if cls.ground[y][x] == cls.ground[y + 2][x] == cls.ground[y + 4][x] != ' ':
+				return 'X' if cls.ground[y][x] == 'X' else 'O'
+		x = 0
+		for y in range(0, 5, 2):
+			if cls.ground[y][x] == cls.ground[y][x + 2] == cls.ground[y][x + 4] != ' ':
+				return 'X' if cls.ground[y][x] == 'X' else 'O'
+		y, x = 0, 0
+		if cls.ground[y][x] == cls.ground[y + 2][x + 2] == cls.ground[y + 4][x + 4] != ' ':
+			return 'X' if cls.ground[y][x] == 'X' else 'O'
+		if cls.ground[y + 4][x] == cls.ground[y + 2][x + 2] == cls.ground[y][x + 4] != ' ':
+			return 'X' if cls.ground[y][x] == 'X' else 'O'
+		if ' ' not in cls.ground[0] and ' ' not in cls.ground[2] and ' ' not in cls.ground[4]:
+			return 'Ничья'
+		return None
